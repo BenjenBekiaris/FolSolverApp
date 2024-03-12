@@ -1,0 +1,353 @@
+﻿@page "/"
+
+<PageTitle>FolSolver</PageTitle>
+
+<h3>FolSolver</h3>
+
+<div >
+    <div class="user-input">
+        <textarea class="user-input" type="text" placeholder="Enter formula to resolve..." @ref="inputField" value="@userInput" @oninput="HandleInput" />
+        <button class="read-formula" @onclick="() => HandleButtonClick()">Spracuj formulu</button>
+    </div>
+    <div class="special-symbols">
+        <button class="special-symbols" @onclick='() => AddSpecialSymbol("∧")'>∧</button>
+        <button class="special-symbols" @onclick='() => AddSpecialSymbol("∨")'>∨</button>
+        <button class="special-symbols" @onclick='() => AddSpecialSymbol("=>")'>=></button>
+        <button class="special-symbols" @onclick='() => AddSpecialSymbol("∀")'>∀</button>
+        <button class="special-symbols" @onclick='() => AddSpecialSymbol("Ǝ")'>Ǝ</button>
+        <button class="special-symbols" @onclick='() => AddSpecialSymbol("¬")'>¬</button>
+    </div>
+</div>
+
+<input type="checkbox" id="modification-proccess" class="accordion-checkbox" />
+<label for="modification-proccess" class="accordion-title">Zobraziť postup úpravy formuly</label>
+<div class="accordion-content">
+    @for (int i = 0; i < 11; i++)
+    {
+        <input type="checkbox" id="@i" class="accordion-checkbox" />
+        <label for="@i" class="accordion-title">@descriptions[i]</label>
+        <div class="accordion-content">
+            @formulaData[i]
+        </div>
+        <br />
+    }
+</div>
+
+@if (cnf.Count != 0)
+{
+    <div class="resolution">
+        <div class="clauses">
+            @for (int i = 0; i < cnf.Count; i++)
+            {
+                int currentIndex = i;
+                <button class="clauses @((i == selectedClauseOne || i == selectedClauseTwo) ? "clauses-selected" : "")" @onclick="() => SelectClauseForButton(currentIndex)">
+                    @Utils.PrintClause(cnf[i])</button>
+            }
+        </div>
+        <div class="history">
+            @if (history.Count != 0)
+            {
+                <table class="history">
+                    <tr>
+                        <th>Step</th>
+                        <th>Formula</th>
+                        <th>Derivation</th>
+                        <th>Unificator</th>
+                    </tr>
+                    @for (int i = 0; i < history.Count; i++)
+                    {
+                        <tr>
+                            <td>@history[i][0]</td>
+                            <td>@history[i][1]</td>
+                            <td>@history[i][2]</td>
+                            <td>@history[i][3]</td>
+                        </tr>
+                    }
+                </table>
+                <button class="copy-history-to-clipboard" @onclick="CopyHistoryToClipBoard">Copy table to clipboard</button>
+            }
+        </div>
+    </div>
+    <div class="selectedClauses">
+        <button class="selectedClauses @((selectedButton == 0) ? "selectedClauses-selected" : "")" @onclick="() => SelectButton(0)">
+            @if (selectedClauseOne != -1)
+            {
+                <b>@Utils.PrintClause(cnf[selectedClauseOne])</b>
+            }
+            else
+            {
+                <b>Vyber klauzulu</b>
+            }
+        </button>
+        <button class="selectedClauses @((selectedButton == 1) ? "selectedClauses-selected" : "")" @onclick="() => SelectButton(1)">
+            @if (selectedClauseTwo != -1)
+            {
+                <b>@Utils.PrintClause(cnf[selectedClauseTwo])</b>
+            }
+            else
+            {
+                <b>Vyber klauzulu</b>
+            }
+        </button>
+        @if (possibleClause != null)
+        {
+            <button class="selectedClauses" @onclick="() => AddResolvedClause()">
+                @Utils.PrintClause(possibleClause)
+            </button>
+        }
+    </div>
+}
+
+@code {
+    [Inject] private IJSRuntime JSRuntime { get; set; }
+
+    private Formula formula = new Formula();
+    private List<Predicate[]> cnf = new List<Predicate[]>();
+
+    private List<string[]> history = new List<string[]>();
+    private string historyInLatex = "";
+    private int numberOfGivenClauses = 0;
+
+    private Predicate[]? possibleClause = null;
+    private List<string[]>? possibleMGU = null;
+
+    string userInput = "";
+
+    string[] descriptions =
+    {
+        "Prečítaná formula",
+        "Negovaná formula",
+        "Prepísanie implikácie pomocou negácie a disjunkcie",
+        "Vnorenie negácie k predikátom",
+        "Premenovanie kvantifikovaných premenných aby nedošlo k zámene nezávislých premenných s rovnakým menom",
+        "Prepis formuly na prenexný tvar",
+        "Prepis formuly na Skolemovský tvar",
+        "Vynechanie všeobecných kvantifikátorov",
+        "Prepis formuly do konjuktívnej normálovej formy",
+        "Formula v podobe množiny klauzúl",
+        "Množina klauzúl po faktorizácii"
+    };
+
+    string[] formulaData = new string[11];
+
+    int selectedButton = 0;
+
+    int selectedClauseOne = -1;
+    int selectedClauseTwo = -1;
+
+    ElementReference inputField;
+
+    private void ProccessFormula()
+    {
+        formulaData[0] = formula.PrintFormula();
+
+        formula.Negate();
+        formulaData[1] = formula.PrintFormula();
+
+        formula.RemoveImplications();
+        formulaData[2] = formula.PrintFormula();
+
+        formula.PushNegationInsideCompletely();
+        formulaData[3] = formula.PrintFormula();
+
+        formula.MakeQuantifiedVariablesUnique();
+        formulaData[4] = formula.PrintFormula();
+
+        formula.ToPrenexForm();
+        formulaData[5] = formula.PrintFormula();
+
+        formula.ToSkolemForm();
+        formulaData[6] = formula.PrintFormula();
+
+        formula.ClearQuantifiers();
+        formulaData[7] = formula.PrintFormula();
+
+        cnf = formula.ToCNF();
+        formulaData[8] = Utils.PrintCNFasFormula(cnf);
+        formulaData[9] = Utils.PrintCNFasSet(cnf);
+
+        Factorization.CNFFactorization(cnf);
+        formulaData[10] = Utils.PrintCNFasSet(cnf);
+
+        for (int i = 0; i < cnf.Count; i++)
+        {
+            history.Add(new string[] {
+                (i + 1).ToString(),
+                Utils.PrintClause(cnf[i]),
+                " ",
+                " " });
+            numberOfGivenClauses++;
+        }
+    }
+
+    private void ResetVariables()
+    {
+        formula = new Formula();
+        cnf.Clear();
+        history.Clear();
+        historyInLatex = "";
+        numberOfGivenClauses = 0;
+        possibleClause = null;
+
+        selectedButton = 0;
+        selectedClauseOne = -1;
+        selectedClauseTwo = -1;
+    }
+
+    private void HandleButtonClick()
+    {
+        if (userInput == "") return;
+        ResetVariables();
+        formula.ParseFormula(userInput);
+
+        if (formula == new Formula()) return;
+        ProccessFormula();
+    }
+
+    private void SelectButton(int number)
+    {
+        selectedButton = number;
+    }
+
+    private void SelectClauseForButton(int number)
+    {
+        if (selectedButton == 0 && selectedClauseTwo != number) selectedClauseOne = number;
+        else if (selectedButton == 1 && selectedClauseOne != number) selectedClauseTwo = number;
+
+        if (selectedClauseOne != -1 && selectedClauseTwo != -1)
+        {
+            possibleClause = ResolveClauses();
+            if (possibleClause != null && possibleMGU != null)
+            {
+                foreach (var predicate in possibleClause)
+                {
+                    Unification.ApplyUnificator(possibleMGU, predicate);
+                }
+            }
+        }
+    }
+
+    private Predicate[]? ResolveClauses()
+    {
+        var clauseOneWorkingCopy = cnf[selectedClauseOne].Select(p => p.DeepCopy()).ToList();
+        var clauseTwoWorkingCopy = cnf[selectedClauseTwo].Select(p => p.DeepCopy()).ToList();
+
+        var mGU = new List<string[]>();
+        bool containsComplementary = false;
+
+        foreach (var predicateOne in clauseOneWorkingCopy)
+        {
+            foreach (var predicateTwo in clauseTwoWorkingCopy)
+            {
+                var substitutions = Unification.Unify(predicateOne, predicateTwo);
+
+                if (substitutions != null) mGU.AddRange(substitutions);
+            }
+        }
+
+        for (int i = 0; i < clauseOneWorkingCopy.Count; i++)
+        {
+            for (int j = 0; j < clauseTwoWorkingCopy.Count; j++)
+            {
+                if (Utils.AreComplementary(clauseOneWorkingCopy[i], clauseTwoWorkingCopy[j]))
+                {
+                    containsComplementary = true;
+
+                    clauseOneWorkingCopy.RemoveAt(i);
+                    clauseTwoWorkingCopy.RemoveAt(j);
+                    i--;
+                    j--;
+                    break;
+                }
+            }
+        }
+
+        if (!containsComplementary) return null;
+
+        possibleMGU = new List<string[]>(mGU);
+
+        return clauseOneWorkingCopy.Concat(clauseTwoWorkingCopy).ToArray();
+    }
+
+    private void AddResolvedClause()
+    {
+        if (possibleClause == null) return;
+
+        var resolvent = possibleClause.Select(p => p.DeepCopy()).ToArray();
+        cnf.Add(resolvent);
+
+        history.Add(new string[] {
+            cnf.Count.ToString(),
+            Utils.PrintClause(possibleClause),
+            (selectedClauseOne + 1).ToString() + ',' + (selectedClauseTwo + 1).ToString(),
+            Utils.PrintUnificator(possibleMGU)
+    });
+
+        possibleClause = null;
+        possibleMGU = null;
+        selectedClauseOne = -1;
+        selectedClauseTwo = -1;
+        selectedButton = 0;
+
+    }
+
+    private async Task CopyHistoryToClipBoard()
+    {
+        UpdateHistoryInLatex();
+        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", historyInLatex);
+    }
+
+    private void UpdateHistoryInLatex()
+    {
+        historyInLatex = @"\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \toprule
+    Step & Formula & Derivation & Unificator\\
+    \midrule \midrule
+";
+
+        foreach (var row in history)
+        {
+            historyInLatex += "    " + row[0] + '&' + "\\{" + row[1].Trim(new char[] { '{', '}' }) + "\\}" + '&' + row[2] + '&' + row[3] + "\\\\" + "\n";
+            historyInLatex += "    \\midrule";
+            if (int.Parse(row[0]) == numberOfGivenClauses)
+            {
+                historyInLatex += " \\midrule";
+            }
+            historyInLatex += "\n";
+        }
+
+        historyInLatex += @"    \bottomrule
+    \end{tabular}
+\end{table}";
+    }
+
+    private async void AddSpecialSymbol(string symbol)
+    {
+        if (symbol == null) return;
+
+        var selectionStart = await JSRuntime.InvokeAsync<int>("getSelectionStart", inputField);
+
+        userInput = userInput.Insert(selectionStart, symbol);
+
+        StateHasChanged();
+
+        await inputField.FocusAsync();
+        await JSRuntime.InvokeVoidAsync("setSelectionRange", inputField, selectionStart + symbol.Length, selectionStart + symbol.Length);
+
+
+    }
+
+    private void HandleInput(ChangeEventArgs e)
+    {
+        userInput = e.Value.ToString();
+        CheckSpecialInput();
+    }
+
+    private void CheckSpecialInput()
+    {
+        userInput = InputDictionary.CheckAndReplaceSpecialCharacters(userInput);
+        StateHasChanged();
+    }
+}

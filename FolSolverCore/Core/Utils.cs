@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FolSolverCore.Core
+﻿namespace FolSolverCore.Core
 {
     public static class Utils
     {
@@ -166,6 +164,7 @@ namespace FolSolverCore.Core
 
         public static string PrintClause(Predicate[] clause)
         {
+            if (clause.Length == 0) return "□";
             string output = "{";
             for (int j = 0; j < clause.Length; j++)
             {
@@ -198,6 +197,30 @@ namespace FolSolverCore.Core
             output += " ]";
             return output;
         }
+
+        public static bool CompareClauses(Predicate[] clause1, Predicate[] clause2)
+        {
+            if (clause1.Length != clause2.Length) return false;
+            for (int i = 0; i < clause1.Length; i++)
+            {
+                if (clause1[i].PrintPredicate() != clause2[i].PrintPredicate()) return false;
+            }
+            return true;
+        }
+
+        public static string ChangeToLowerIndex(string input)
+        {
+            string output = "";
+            Console.WriteLine(input);
+            foreach (var character in input)
+            {
+                output += (char)(character - '0' + '₀');
+            }
+            Console.WriteLine(output);
+            return output;
+        }
+
+        
     }
 
 }

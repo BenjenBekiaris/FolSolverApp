@@ -1,4 +1,14 @@
-﻿div.user-input {
+﻿.page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.side-bar {
+    flex: 1;
+}
+
+div.user-input {
     display: flex;
 }
 
@@ -49,13 +59,18 @@ button.read-formula {
     display: block;
 }
 
+div.input-bottom-bar {
+    width: 80%;
+    display: flex;
+}
+
 div.special-symbols {
-    width:40%;
+    flex: 2;
+    align-content: flex-start;
 }
 
 button.special-symbols {
     padding: 2% 4%;
-    width: 15%;
     font-size: 25px;
     border: 2px solid #ccc;
     border-radius: 0 0 5px 5px;
@@ -63,6 +78,21 @@ button.special-symbols {
     color: #000000;
     text-align: center;
     cursor: pointer;
+}
+
+select.example-formula {
+    padding: 2% 4%;
+    font-size: 25px;
+    border: 2px solid #ccc;
+    border-radius: 0 0 5px 5px;
+    background-color: #f0f0f0;
+    color: #000000;
+    text-align: center;
+    cursor: pointer;
+}
+
+option.example-formula {
+    text-align: left;
 }
 
 div.resolution {

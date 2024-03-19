@@ -239,10 +239,10 @@
                 if (_quantifiers[i] == Quantifier.Existencial)
                 {
                     string replacementFunction;
-                    if (i == 0) { replacementFunction = "aS" + functionCount; } 
+                    if (i == 0) { replacementFunction = "A" + Utils.ChangeToLowerIndex(functionCount.ToString()); } 
                     else
                     {
-                        replacementFunction = "fS" + functionCount + "(";
+                        replacementFunction = "f" + Utils.ChangeToLowerIndex(functionCount.ToString()) + "(";
                         for (int j = 0; j < i; j++)
                         {
                             replacementFunction += _quantifiedVariables[j];

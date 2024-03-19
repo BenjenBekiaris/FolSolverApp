@@ -4,7 +4,9 @@
 <div class="top-bar">
     <h2 class="page-title">FolSolver</h2>
     <div class="middle-panel">
-        <a class="middle-panel-button" href="/documentation">Documentation</a>
+        <NavLink style="text-decoration:none" href="documentation">
+            <span class="middle-panel-button">Documentation</span>
+        </NavLink>
     </div>
     <div class="top-bar-buttons">
         @for (int i = 0; i < LanguageVariations.processDescriptions.Count; i++)

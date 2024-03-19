@@ -1,131 +1,132 @@
 ﻿@page "/"
 
 <PageTitle>FolSolver</PageTitle>
-<div class="page">
-    <div class="side-bar">
+<div class="top-bar">
+    <h2 class="page-title">FolSolver</h2>
+    <div class="middle-panel">
+        <a class="middle-panel-button" href="/documentation">Documentation</a>
+    </div>
+    <div class="top-bar-buttons">
         @for (int i = 0; i < LanguageVariations.processDescriptions.Count; i++)
         {
             int currentIndex = i;
-            <button @onclick="() => SwitchLanguage(currentIndex)">@LanguageVariations.availibleLanguages[currentIndex] @currentIndex</button>
+            <button class="switch-language" @onclick="() => SwitchLanguage(currentIndex)">@LanguageVariations.availibleLanguages[currentIndex]</button>
         }
     </div>
+</div>
     
-    <h3>FolSolver</h3>
-
-    <div>
-        <div class="user-input">
-            <textarea class="user-input" type="text" placeholder=@LanguageVariations.inputMessage[language] @ref="inputField" value="@userInput" @oninput="HandleInput" />
-            <button class="read-formula" @onclick="() => HandleButtonClick()">@LanguageVariations.processButton[language]</button>
-        </div>
-        <div class="input-bottom-bar">
-            <div class="special-symbols">
-                <button class="special-symbols" @onclick='() => AddSpecialSymbol("∧")'>∧</button>
-                <button class="special-symbols" @onclick='() => AddSpecialSymbol("∨")'>∨</button>
-                <button class="special-symbols" @onclick='() => AddSpecialSymbol("=>")'>=></button>
-                <button class="special-symbols" @onclick='() => AddSpecialSymbol("∀")'>∀</button>
-                <button class="special-symbols" @onclick='() => AddSpecialSymbol("Ǝ")'>Ǝ</button>
-                <button class="special-symbols" @onclick='() => AddSpecialSymbol("¬")'>¬</button>
-            </div>
-            <select class="example-formula" @onchange="ExampleOptionSelected">
-                <option class="example-formula" value="-1">Select Example</option>
-                @for (int i = 0; i < ExampleFormulas.Examples.Count; i++)
-                {
-                    int currentIndex = i;
-                    <option class="example-formula" value="@currentIndex">Example @currentIndex</option>
-                }
-            </select>
-        </div>
-        
+<div style="margin-top:15px">
+    <div class="user-input">
+        <textarea class="user-input" type="text" placeholder=@LanguageVariations.inputMessage[language] @ref="inputField" value="@userInput" @oninput="HandleInput" />
+        <button class="read-formula" @onclick="() => HandleButtonClick()">@LanguageVariations.processButton[language]</button>
     </div>
-
-    @if (cnf.Count != 0)
-    {
-        <input type="checkbox" id="modification-proccess" class="accordion-checkbox" />
-        <label for="modification-proccess" class="accordion-title">@LanguageVariations.processDescriptions[language][0]</label>
-        <div class="accordion-content">
-            @for (int i = 0; i < LanguageVariations.processDescriptions[language].Length - 1; i++)
-            {
-                <input type="checkbox" id="@i" class="accordion-checkbox" />
-                <label for="@i" class="accordion-title">@LanguageVariations.processDescriptions[language][i+1]</label>
-                <div class="accordion-content">
-                    @formulaData[i]
-                </div>
-                <br />
-            }
+    <div class="input-bottom-bar">
+        <div class="special-symbols">
+            <button class="special-symbols" @onclick='() => AddSpecialSymbol("∧")'>∧</button>
+            <button class="special-symbols" @onclick='() => AddSpecialSymbol("∨")'>∨</button>
+            <button class="special-symbols" @onclick='() => AddSpecialSymbol("=>")'>=></button>
+            <button class="special-symbols" @onclick='() => AddSpecialSymbol("∀")'>∀</button>
+            <button class="special-symbols" @onclick='() => AddSpecialSymbol("Ǝ")'>Ǝ</button>
+            <button class="special-symbols" @onclick='() => AddSpecialSymbol("¬")'>¬</button>
         </div>
-    }
-
-    @if (cnf.Count != 0)
-    {
-        <div class="resolution">
-            <div class="clauses">
-                @for (int i = 0; i < cnf.Count; i++)
-                {
-                    int currentIndex = i;
-                    <button class="clauses @((i == selectedClauseOne || i == selectedClauseTwo) ? "clauses-selected" : "")" @onclick="() => SelectClauseForButton(currentIndex)">
-                        @Utils.PrintClause(cnf[i])
-                    </button>
-                }
-            </div>
-            <div class="history">
-                @if (history.Count != 0)
-                {
-                    <table class="history">
-                        <tr>
-                            <th>@LanguageVariations.tableHeaders[language][0]</th>
-                            <th>@LanguageVariations.tableHeaders[language][1]</th>
-                            <th>@LanguageVariations.tableHeaders[language][2]</th>
-                            <th>@LanguageVariations.tableHeaders[language][3]</th>
-                        </tr>
-                        @for (int i = 0; i < history.Count; i++)
-                        {
-                            <tr>
-                                <td>@history[i][0]</td>
-                                <td>@history[i][1]</td>
-                                <td>@history[i][2]</td>
-                                <td>@history[i][3]</td>
-                            </tr>
-                        }
-                    </table>
-                    <button class="copy-history-to-clipboard" @onclick="CopyHistoryToClipBoard">@LanguageVariations.copyButton[language]</button>
-                }
-            </div>
-        </div>
-        <div class="selectedClauses">
-            <button class="selectedClauses @((selectedButton == 0) ? "selectedClauses-selected" : "")" @onclick="() => SelectButton(0)">
-                @if (selectedClauseOne != -1)
-                {
-                    <b>@Utils.PrintClause(cnf[selectedClauseOne])</b>
-                }
-                else
-                {
-                    <b>@LanguageVariations.chooseClause[language]</b>
-                }
-            </button>
-            <button class="selectedClauses @((selectedButton == 1) ? "selectedClauses-selected" : "")" @onclick="() => SelectButton(1)">
-                @if (selectedClauseTwo != -1)
-                {
-                    <b>@Utils.PrintClause(cnf[selectedClauseTwo])</b>
-                }
-                else
-                {
-                    <b>@LanguageVariations.chooseClause[language]</b>
-                }
-            </button>
-            @if (possibleClause == null && selectedClauseOne != -1 && selectedClauseTwo != -1)
+        <select class="example-formula" @onchange="ExampleOptionSelected">
+            <option class="example-formula" value="-1">@LanguageVariations.exampleSelector[language][0]</option>
+            @for (int i = 0; i < ExampleFormulas.Examples.Count; i++)
             {
-                <button class="selectedClauses">@LanguageVariations.unificationError[language]</button>
+                int currentIndex = i;
+                <option class="example-formula" value="@currentIndex">@LanguageVariations.exampleSelector[language][1] @(currentIndex + 1)</option>
             }
-            @if (possibleClause != null)
+        </select>
+    </div>
+        
+</div>
+
+@if (cnf.Count != 0)
+{
+    <input type="checkbox" id="modification-proccess" class="accordion-checkbox" />
+    <label for="modification-proccess" class="accordion-title">@LanguageVariations.processDescriptions[language][0]</label>
+    <div class="accordion-content">
+        @for (int i = 0; i < LanguageVariations.processDescriptions[language].Length - 1; i++)
+        {
+            <input type="checkbox" id="@i" class="accordion-checkbox" />
+            <label for="@i" class="accordion-title">@LanguageVariations.processDescriptions[language][i+1]</label>
+            <div class="accordion-content">
+                @formulaData[i]
+            </div>
+            <br />
+        }
+    </div>
+}
+
+@if (cnf.Count != 0)
+{
+    <div class="resolution">
+        <div class="clauses">
+            @for (int i = 0; i < cnf.Count; i++)
             {
-                <button class="selectedClauses" @onclick="() => AddResolvedClause()">
-                    @Utils.PrintClause(possibleClause)
+                int currentIndex = i;
+                <button class="clauses @((i == selectedClauseOne || i == selectedClauseTwo) ? "clauses-selected" : "")" @onclick="() => SelectClauseForButton(currentIndex)">
+                    @Utils.PrintClause(cnf[i])
                 </button>
             }
         </div>
-    }
-
-</div>
+        <div class="history">
+            @if (history.Count != 0)
+            {
+                <table class="history">
+                    <tr>
+                        <th>@LanguageVariations.tableHeaders[language][0]</th>
+                        <th>@LanguageVariations.tableHeaders[language][1]</th>
+                        <th>@LanguageVariations.tableHeaders[language][2]</th>
+                        <th>@LanguageVariations.tableHeaders[language][3]</th>
+                    </tr>
+                    @for (int i = 0; i < history.Count; i++)
+                    {
+                        <tr>
+                            <td>@history[i][0]</td>
+                            <td>@history[i][1]</td>
+                            <td>@history[i][2]</td>
+                            <td>@history[i][3]</td>
+                        </tr>
+                    }
+                </table>
+                <button class="copy-history-to-clipboard" @onclick="CopyHistoryToClipBoard">@LanguageVariations.copyButton[language]</button>
+            }
+        </div>
+    </div>
+    <div class="selectedClauses">
+        <button class="selectedClauses @((selectedButton == 0) ? "selectedClauses-selected" : "")" @onclick="() => SelectButton(0)">
+            @if (selectedClauseOne != -1)
+            {
+                <b>@Utils.PrintClause(cnf[selectedClauseOne])</b>
+            }
+            else
+            {
+                <b>@LanguageVariations.chooseClause[language]</b>
+            }
+        </button>
+        <button class="selectedClauses @((selectedButton == 1) ? "selectedClauses-selected" : "")" @onclick="() => SelectButton(1)">
+            @if (selectedClauseTwo != -1)
+            {
+                <b>@Utils.PrintClause(cnf[selectedClauseTwo])</b>
+            }
+            else
+            {
+                <b>@LanguageVariations.chooseClause[language]</b>
+            }
+        </button>
+        @if (possibleClause == null && selectedClauseOne != -1 && selectedClauseTwo != -1)
+        {
+            <button class="selectedClauses">@LanguageVariations.unificationError[language]</button>
+        }
+        @if (possibleClause != null)
+        {
+            <button class="selectedClauses" @onclick="() => AddResolvedClause()">
+                @Utils.PrintClause(possibleClause)
+            </button>
+        }
+    </div>
+}
 
 @code {
     [Inject] private IJSRuntime JSRuntime { get; set; }

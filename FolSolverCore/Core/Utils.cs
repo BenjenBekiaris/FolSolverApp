@@ -220,6 +220,16 @@
             return output;
         }
 
+        public static string SequentToFormula(string input)
+        {
+            string output;
+
+            output = input.Trim();
+            output = output.Replace("\n\n", " => ");
+            output = output.Replace("\n", " ∧ ");
+
+            return output;
+        }
         
     }
 

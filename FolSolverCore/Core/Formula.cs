@@ -304,8 +304,10 @@
             return output;
         }
 
-        public void ParseFormula(string formula)
+        public void ParseFormula(string input)
         {
+            string formula = Utils.SequentToFormula(input);
+
             int index = 0;
             int bracketDepth = 0;
             int[] splitPoint = { 0, 0, 2048}; //index of split, logic priority, bracket depth at the point of split

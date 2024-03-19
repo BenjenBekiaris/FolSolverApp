@@ -5,7 +5,23 @@
         public static List<string> inputMessage = new List<string>
         {
             "Enter formula to resolve...",
-            "Zadajte formulu pre rezolúciu..."
+            "Zadaj formulu pre rezolúciu..."
+        };
+
+        static string[] exampleSelectorEN =
+        {
+            "Select example",
+            "Example"
+        };
+        static string[] exampleSelectorSK =
+        {
+            "Vyber príklad",
+            "Príklad"
+        };
+        public static List<string[]> exampleSelector = new List<string[]>
+        {
+            exampleSelectorEN,
+            exampleSelectorSK
         };
 
         public static List<string> processButton = new List<string>

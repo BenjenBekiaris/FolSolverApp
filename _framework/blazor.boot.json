@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "FolSolverApp",
   "resources": {
-    "hash": "sha256-DhRHmajlxFvuNOjxLHVj+3MqI3ctxngp+JXWCTvdBl4=",
+    "hash": "sha256-xuc46dsFFE8AyB2JlMFUYxlj3BA6ZHxYeBvdmgyQXjw=",
     "jsModuleNative": {
       "dotnet.native.8.0.2.ammtxsfttb.js": "sha256-gPMK16QWoJSTxorlZJqcVtbBRTniIQWlLsJN2O4cJHg="
     },
@@ -17,8 +17,8 @@
       "icudt_no_CJK.dat": "sha256-L7sV7NEYP37/Qr2FPCePo5cJqRgTXRwGHuwF5Q+0Nfs="
     },
     "assembly": {
-      "FolSolverApp.wasm": "sha256-VdWDvQN9fewUw6LidNF4Ujwbqa7ez2ws6zJ9m2NbkAA=",
-      "FolSolverCore.wasm": "sha256-wNsZwnwrtigZLf+lBtDDrwJ62cIdGkc/ki6oNY+5ZEw=",
+      "FolSolverApp.wasm": "sha256-Gls0fGMm8SCJ7jLcvvGtfans6hH22jwgyDWbpWysbts=",
+      "FolSolverCore.wasm": "sha256-yIELOgLFcBTFgvk0maYlszmaFGR/UdoE4Hc5N3AIWZ0=",
       "Microsoft.AspNetCore.Components.wasm": "sha256-A1otvYsaArrpaHnfv3QUmJaUKQwNc9RFQlqxK1Vh7Ug=",
       "Microsoft.AspNetCore.Components.Web.wasm": "sha256-17g8gmZs26DNTyisK3XsWJgVbMOs2o52Qvx2/FdbHMQ=",
       "Microsoft.AspNetCore.Components.WebAssembly.wasm": "sha256-jrdFRjrF1131MZ3HGQVsI3dX8cLdZvPz85lsBltxjSM=",

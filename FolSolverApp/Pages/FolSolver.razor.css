@@ -164,6 +164,10 @@ button.clauses-selected {
     color: gray;
 }
 
+button.clauses-exists {
+    border-color: red;
+}
+
 div.history {
     width: 45%;
     flex: 1;
@@ -224,3 +228,4 @@ button.selectedClauses {
 button.selectedClauses-selected {
     border-color: blue;  
 }
+

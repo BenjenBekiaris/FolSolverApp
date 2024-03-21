@@ -65,7 +65,8 @@
             @for (int i = 0; i < cnf.Count; i++)
             {
                 int currentIndex = i;
-                <button class="clauses @((i == selectedClauseOne || i == selectedClauseTwo) ? "clauses-selected" : "")" @onclick="() => SelectClauseForButton(currentIndex)">
+                <button class="clauses @((i == selectedClauseOne || i == selectedClauseTwo) ? "clauses-selected" : "") 
+                 @((i == alreadyExistingClause) ? "clauses-exists" : "")" @onclick="() => SelectClauseForButton(currentIndex)">
                     @Utils.PrintClause(cnf[i])
                 </button>
             }
@@ -147,6 +148,7 @@
     string[] formulaData = new string[11];
 
     int selectedButton = 0;
+    int alreadyExistingClause = -1;
 
     int selectedClauseOne = -1;
     int selectedClauseTwo = -1;
@@ -250,6 +252,7 @@
 
     private Predicate[]? ResolveClauses()
     {
+        alreadyExistingClause = -1;
         var clauseOneWorkingCopy = cnf[selectedClauseOne].Select(p => p.DeepCopy()).ToList();
         var clauseTwoWorkingCopy = cnf[selectedClauseTwo].Select(p => p.DeepCopy()).ToList();
 
@@ -293,10 +296,15 @@
     private void AddResolvedClause()
     {
         if (possibleClause == null) return;
-
         foreach (var clause in cnf)
-        {
-            if (Utils.CompareClauses(clause, possibleClause)) return;
+        {           
+            if (Utils.CompareClauses(clause, possibleClause))
+            {
+                alreadyExistingClause = cnf.IndexOf(clause);
+                StateHasChanged();
+                Console.WriteLine(alreadyExistingClause.ToString());
+                return;
+            }
         }
 
         var resolvent = possibleClause.Select(p => p.DeepCopy()).ToArray();

@@ -96,7 +96,7 @@
                 {
                     if (_quantifiedVariables[i] == variable)
                     {
-                        string newName = variable + '\'';
+                        string newName = variable + '©';
                         _quantifiedVariables[i] = newName;
                         RewriteVariable(variable, newName);
                     }
@@ -118,6 +118,17 @@
         {
             List<string> quantifiedVariables = new List<string>();
             MakeQuantifiedVariablesUnique(ref quantifiedVariables);
+            
+            for (int i = 0; i < quantifiedVariables.Count; i++)
+            {
+                Console.WriteLine(quantifiedVariables[i]);
+                var newVariable = Utils.ReplaceApostrophiesWithNumber(quantifiedVariables[i]);
+                Console.WriteLine(newVariable);
+                if (newVariable != quantifiedVariables[i])
+                {
+                    RewriteVariable(quantifiedVariables[i], newVariable);
+                }
+            }
 
         }
 
@@ -304,10 +315,8 @@
             return output;
         }
 
-        public void ParseFormula(string input)
+        public void ParseFormula(string formula)
         {
-            string formula = Utils.SequentToFormula(input);
-
             int index = 0;
             int bracketDepth = 0;
             int[] splitPoint = { 0, 0, 2048}; //index of split, logic priority, bracket depth at the point of split

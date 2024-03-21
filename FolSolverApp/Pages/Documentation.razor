@@ -2,55 +2,20 @@
 
 <PageTitle>FolSolver - Documentation</PageTitle>
 <div class="top-bar">
-    <NavLink href="" Match="NavLinkMatch.All">
-        <img src="previous.svg" alt="Previous" class="button-back">
-    </NavLink>
     <h2 class="page-title">Documentation</h2>
 </div>
 
 <div class="symbols-dictionary">
-    <table class="symbols-dictionary">
-        <tr><th>∧</th></tr>
-        @foreach (var key in InputDictionary.conjunctionKeys)
-        {
-            <tr><td>@key</td></tr>
-        }
-    </table>
-    <table class="symbols-dictionary">
-        <tr><th>∨</th></tr>
-        @foreach (var key in InputDictionary.disjunctionKeys)
-        {
-            <tr><td>@key</td></tr>
-        }
-    </table>
-    <table class="symbols-dictionary">
-        <tr><th>¬</th></tr>
-        @foreach (var key in InputDictionary.negationKeys)
-        {
-            <tr><td>@key</td></tr>
-        }
-    </table>
-    <table class="symbols-dictionary">
-        <tr><th>=></th></tr>
-        @foreach (var key in InputDictionary.implicationKeys)
-        {
-            <tr><td>@key</td></tr>
-        }
-    </table>  
-    <table class="symbols-dictionary">
-        <tr><th>∀</th></tr>
-        @foreach (var key in InputDictionary.universalKeys)
-        {
-            <tr><td>@key</td></tr>
-        }
-    </table>
-    <table class="symbols-dictionary">
-        <tr><th>Ǝ</th></tr>
-        @foreach (var key in InputDictionary.existencialKeys)
-        {
-            <tr><td>@key</td></tr>
-        }
-    </table>
+    @foreach (var entry in InputDictionary.specialSymbols)
+    {
+        <table class="symbols-dictionary">
+            <tr><th>@entry.Key</th></tr>
+            @foreach (var value in entry.Value)
+            {
+                <tr><td>@value</td></tr>
+            }
+        </table>
+    }
 </div>
 
 

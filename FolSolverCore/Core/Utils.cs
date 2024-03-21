@@ -211,22 +211,72 @@
         public static string ChangeToLowerIndex(string input)
         {
             string output = "";
-            Console.WriteLine(input);
             foreach (var character in input)
             {
                 output += (char)(character - '0' + '₀');
             }
-            Console.WriteLine(output);
             return output;
+        }
+
+        public static string ReplaceApostrophiesWithNumber(string input)
+        {
+            int count = 0;
+            for (int i = input.Length - 1; i >= 0; i--)
+            {
+                if (input[i] == '©') count++;
+                else break;
+            }
+
+            var countSuffix = ChangeToLowerIndex(count.ToString());
+
+            if (countSuffix == "₀") return input;
+
+            return input.Substring(0, input.Length - count) + countSuffix;
         }
 
         public static string SequentToFormula(string input)
         {
-            string output;
+            string output = "";
 
-            output = input.Trim();
-            output = output.Replace("\n\n", " => ");
-            output = output.Replace("\n", " ∧ ");
+            var tempArray = input.Split('⊢');
+
+            if (tempArray.Length == 1) { return input; }
+
+            var premises = tempArray[0].Trim().Split(new char[] { ',', '\n' }).ToList();
+            var conclusions = tempArray[1].Trim().Split(new char[] { ',', '\n' }).ToList();
+
+            for (int i = 0; i < premises.Count; i++)
+            {
+                premises[i] = premises[i].Trim();
+                if (premises[i].Length == 0)
+                {
+                    premises.RemoveAt(i);
+                    i--;
+                }
+            }
+            for (int i = 0; i < conclusions.Count; i++)
+            {
+                conclusions[i] = conclusions[i].Trim();
+                if (conclusions[i].Length == 0)
+                {
+                    conclusions.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            output += "(";
+            for (int i = 0; i < premises.Count; i++)
+            {
+                output += "(" + premises[i] + ")";
+                if(i != premises.Count - 1) output += " ∧ ";
+            }
+            output += ") => (";
+            for (int i = 0; i < conclusions.Count; i++)
+            {
+                output += "(" + conclusions[i] + ")";
+                if (i != conclusions.Count - 1) output += " ∧ ";
+            }
+            output += ")";
 
             return output;
         }

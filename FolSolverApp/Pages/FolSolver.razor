@@ -4,7 +4,7 @@
 <div class="top-bar">
     <h2 class="page-title">FolSolver</h2>
     <div class="middle-panel">
-        <NavLink style="text-decoration:none" href="documentation">
+        <NavLink style="text-decoration:none" target="_blank" href="documentation">
             <span class="middle-panel-button">Documentation</span>
         </NavLink>
     </div>
@@ -24,12 +24,10 @@
     </div>
     <div class="input-bottom-bar">
         <div class="special-symbols">
-            <button class="special-symbols" @onclick='() => AddSpecialSymbol("∧")'>∧</button>
-            <button class="special-symbols" @onclick='() => AddSpecialSymbol("∨")'>∨</button>
-            <button class="special-symbols" @onclick='() => AddSpecialSymbol("=>")'>=></button>
-            <button class="special-symbols" @onclick='() => AddSpecialSymbol("∀")'>∀</button>
-            <button class="special-symbols" @onclick='() => AddSpecialSymbol("Ǝ")'>Ǝ</button>
-            <button class="special-symbols" @onclick='() => AddSpecialSymbol("¬")'>¬</button>
+            @foreach (var entry in InputDictionary.specialSymbols)
+            {
+                <button class="special-symbols" @onclick="() => AddSpecialSymbol(entry.Key)">@entry.Key</button>
+            }
         </div>
         <select class="example-formula" @onchange="ExampleOptionSelected">
             <option class="example-formula" value="-1">@LanguageVariations.exampleSelector[language][0]</option>
@@ -216,7 +214,8 @@
     {
         if (userInput == "") return;
         ResetVariables();
-        formula.ParseFormula(userInput);
+        string inputAfterProcessing = Utils.SequentToFormula(userInput);
+        formula.ParseFormula(inputAfterProcessing);
 
         if (formula == new Formula()) return;
         ProccessFormula();
@@ -377,10 +376,17 @@
         StateHasChanged();
     }
 
-    private void HandleInput(ChangeEventArgs e)
+    private async void HandleInput(ChangeEventArgs e)
     {
         userInput = e.Value.ToString();
+
+        var selectionStart = await JSRuntime.InvokeAsync<int>("getSelectionStart", inputField);
+        var userInputOriginalLenght = userInput.Length;
+        
         CheckSpecialInput();
+
+        var offset = userInput.Length - userInputOriginalLenght;
+        await JSRuntime.InvokeVoidAsync("setSelectionRange", inputField, selectionStart + offset, selectionStart + offset);
     }
 
     private void CheckSpecialInput()

@@ -68,10 +68,11 @@
             _quantifiedVariables.Clear();
         }
 
-        public void ParsePredicate(string predicate)
+        public void ParsePredicate(string input)
         {
             
             int index = 0; 
+            string predicate = input.Trim();
             char c;
             string name = "";
             string quantifiedVariable = "";
@@ -123,20 +124,24 @@
             while (Char.IsLetterOrDigit(c))
             {
                 name += c;
+                if (index >= predicate.Length) break;
                 c = predicate[index++];
             }
 
-            c = predicate[index++];
-            int bracketDepth = 1;
-
-            while (bracketDepth > 0)
+            if (index < predicate.Length)
             {
-                if (c == '(') bracketDepth++;
-                else if (c == ')') bracketDepth--;
+                c = predicate[index++];
+                int bracketDepth = 1;
 
-                if (bracketDepth > 0) { argumentsBuffer += c; c = predicate[index++];  }
+                while (bracketDepth > 0)
+                {
+                    if (c == '(') bracketDepth++;
+                    else if (c == ')') bracketDepth--;
+
+                    if (bracketDepth > 0) { argumentsBuffer += c; c = predicate[index++]; }
+                }
             }
-             
+
             _name = name;
             _stringArguments = Utils.SplitArguments(argumentsBuffer);
             _arity = _stringArguments.Length;
@@ -166,8 +171,11 @@
 
             if (_negated) { output += '¬'; }
 
-            output += _name + '(';
-            output += string.Join(',', _stringArguments) + ')';
+            output += _name;
+            if (_stringArguments.Length > 0)
+            {
+                output += '(' + string.Join(',', _stringArguments) + ')';
+            }
             return output;
         }
 

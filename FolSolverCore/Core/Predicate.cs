@@ -39,7 +39,7 @@
                 { 
                     if (_quantifiedVariables[i] == variable) 
                     {
-                        string newName = variable + '\'';
+                        string newName = variable + '©';
                         _quantifiedVariables[i] = newName;
                         RewriteVariable(variable, newName);
                     }
@@ -59,6 +59,10 @@
                 if (_stringArguments[i] == oldName) { _stringArguments[i] = newName; }
                 if (Utils.IsFunction(_stringArguments[i])) { _stringArguments[i] = Utils.RewriteVariableInFunction(oldName, newName, _stringArguments[i]); }
 
+            }
+            for (int i = 0; i < _quantifiedVariables.Count; i++)
+            {
+                if (_quantifiedVariables[i] == oldName) { _quantifiedVariables[i] = newName; }
             }
         }
 

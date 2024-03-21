@@ -121,9 +121,7 @@
             
             for (int i = 0; i < quantifiedVariables.Count; i++)
             {
-                Console.WriteLine(quantifiedVariables[i]);
                 var newVariable = Utils.ReplaceApostrophiesWithNumber(quantifiedVariables[i]);
-                Console.WriteLine(newVariable);
                 if (newVariable != quantifiedVariables[i])
                 {
                     RewriteVariable(quantifiedVariables[i], newVariable);

@@ -422,6 +422,10 @@ button.clauses-selected[b-j89r6awter] {
     color: gray;
 }
 
+button.clauses-exists[b-j89r6awter] {
+    border-color: red;
+}
+
 div.history[b-j89r6awter] {
     width: 45%;
     flex: 1;
@@ -482,3 +486,4 @@ button.selectedClauses[b-j89r6awter] {
 button.selectedClauses-selected[b-j89r6awter] {
     border-color: blue;  
 }
+

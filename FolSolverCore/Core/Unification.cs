@@ -21,8 +21,8 @@
                 if (unificator == null) { return null; }
                 if (unificator != new List<string[]>())
                 {
-                    ApplyUnificator(unificator, predicate1);
-                    ApplyUnificator(unificator, predicate2);
+                    ApplyUnificator(unificator, predicate1, i);
+                    ApplyUnificator(unificator, predicate2, i);
                     ApplyUnificator(unificator, ref mGUnificator);
                     foreach (var substitution in unificator)
                     {
@@ -120,11 +120,11 @@
             }
             return output.ToArray();
         }
-        public static void ApplyUnificator(List<string[]> unificator, Predicate predicate)
+        public static void ApplyUnificator(List<string[]> unificator, Predicate predicate, int counter)
         {
             foreach (var substitution in unificator)
             {
-                predicate.RewriteVariable(substitution[1], substitution[0]);
+                predicate.RewriteVariable(substitution[1], substitution[0], counter);
             }
         }
         private static void ApplyUnificator(List<string[]> unificator, ref List<string[]> mGUnificator)

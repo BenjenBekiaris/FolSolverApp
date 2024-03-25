@@ -66,6 +66,20 @@
             }
         }
 
+        public void RewriteVariable(string oldName, string newName, int startIndex)
+        {
+            for (int i = startIndex; i < _stringArguments.Length; i++)
+            {
+                if (_stringArguments[i] == oldName) { _stringArguments[i] = newName; }
+                if (Utils.IsFunction(_stringArguments[i])) { _stringArguments[i] = Utils.RewriteVariableInFunction(oldName, newName, _stringArguments[i]); }
+
+            }
+            for (int i = 0; i < _quantifiedVariables.Count; i++)
+            {
+                if (_quantifiedVariables[i] == oldName) { _quantifiedVariables[i] = newName; }
+            }
+        }
+
         public void ClearQuantifiers()
         {
             _quantifiers.Clear();

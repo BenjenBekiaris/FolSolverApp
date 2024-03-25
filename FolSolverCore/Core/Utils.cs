@@ -242,8 +242,11 @@
 
             if (tempArray.Length == 1) { return input; }
 
-            var premises = tempArray[0].Trim().Split(new char[] { ',', '\n' }).ToList();
-            var conclusions = tempArray[1].Trim().Split(new char[] { ',', '\n' }).ToList();
+            var processedPremises = PreProcessString(tempArray[0]);
+            var processedConclusions = PreProcessString(tempArray[1]);
+
+            var premises = processedPremises.Split(new char[] { '©', '\n' }).ToList();
+            var conclusions = processedConclusions.Split(new char[] { '©', '\n' }).ToList();
 
             for (int i = 0; i < premises.Count; i++)
             {
@@ -280,7 +283,45 @@
 
             return output;
         }
-        
+
+        private static string PreProcessString(string input)
+        {
+            string output = input.Trim();
+            int bracketDepth = 0;
+
+            for (int i = 0; i < output.Length; i++)
+            {
+                if (output[i] == '(') bracketDepth++;
+                if (output[i] == ')') bracketDepth--;
+
+                if (output[i] == ',' && bracketDepth == 0)
+                {
+                    output = ReplaceCharAtIndex(output, i, '©');
+                }
+            }
+
+
+            return output;
+        }
+
+        private static string ReplaceCharAtIndex(string originalString, int index, char newChar)
+        {
+            if (index < 0 || index >= originalString.Length)
+            {
+                // Index out of range
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            // Convert the string to a char array
+            char[] chars = originalString.ToCharArray();
+
+            // Replace the character at the specified index
+            chars[index] = newChar;
+
+            // Convert the char array back to a string and return it
+            return new string(chars);
+        }
+
     }
 
 }

@@ -132,6 +132,10 @@
 
         public void RewriteVariable(string oldName, string newName)
         {
+            for (int i = 0; i < _quantifiedVariables.Count; i++)
+            {
+                if (_quantifiedVariables[i] == oldName) { _quantifiedVariables[i] = newName; }
+            }
             if (_leftSideF != null) { _leftSideF.RewriteVariable(oldName, newName); }
             else { _leftSideP?.RewriteVariable(oldName, newName); }
             if (_rightSideF != null) { _rightSideF.RewriteVariable(oldName, newName); }

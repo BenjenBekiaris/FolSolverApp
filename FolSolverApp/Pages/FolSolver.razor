@@ -244,7 +244,7 @@
             {
                 foreach (var predicate in possibleClause)
                 {
-                    Unification.ApplyUnificator(possibleMGU, predicate);
+                    Unification.ApplyUnificator(possibleMGU, predicate, 0);
                 }
             }
         }

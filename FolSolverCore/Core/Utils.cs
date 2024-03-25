@@ -1,4 +1,6 @@
-﻿namespace FolSolverCore.Core
+﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace FolSolverCore.Core
 {
     public static class Utils
     {
@@ -113,6 +115,67 @@
                 if (IsFunction(functionArguments[i]))
                 {
                     if (FunctionContainsVariable(functionArguments[i], variable)) { return true; }
+                }
+            }
+            return false;
+        }
+
+        public static bool PredicatesContainSameVariable(Predicate predicate1, Predicate predicate2)
+        {
+            foreach (string argument in predicate1.StringArguments)
+            {
+                if (IsVariable(argument) && PredicateContainsVariable(predicate2, argument)) { return true; }
+                if (IsFunction(argument))
+                {
+                    var allVariables = GetAllVariablesFromFunction(argument);
+                    foreach (var variable in allVariables)
+                    {
+                        if (PredicateContainsVariable(predicate2, variable)) { return true; }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private static bool PredicateContainsVariable(Predicate predicate, string variable)
+        {
+            foreach(string argument in predicate.StringArguments)
+            {
+                if (IsVariable(argument) && argument == variable) { return true; };
+                if (IsFunction(argument) && FunctionContainsVariable(argument, variable)) { return true; }
+            }
+            return false;
+        }
+
+        private static List<string> GetAllVariablesFromFunction(string function)
+        {
+            var output = new List<string>();
+
+            var arguments = SplitArguments(SplitFunction(function)[1]);
+
+            foreach (var argument in arguments)
+            {
+                if (IsVariable(argument)) output.Add(argument);
+                if (IsFunction(argument)) output.AddRange(GetAllVariablesFromFunction(argument));
+            }
+
+            return output;
+        }
+
+        private static bool FunctionsContainSameVariable(string function1, string function2)
+        {
+            var arguments = SplitArguments(SplitFunction(function1)[1]);
+
+            foreach (string argument in arguments)
+            {
+                if (IsVariable(argument))
+                {
+                    if (FunctionContainsVariable(function2, argument)) { return true; }
+                }
+                if (IsFunction(argument))
+                {
+                    if (FunctionsContainSameVariable(argument, function2)) { return true; }
                 }
             }
             return false;

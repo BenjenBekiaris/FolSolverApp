@@ -17,7 +17,13 @@
             {
                 for (int j = 1 + i; j < list.Count; j++)
                 {
-                    if (CheckUnifiability(list[i], list[j]))
+                    if (list[i].PrintPredicate() == list[j].PrintPredicate())
+                    {
+                        list.RemoveAt(j);
+                        j--;
+                        continue;
+                    }
+                    if (!Utils.PredicatesContainSameVariable(list[i], list[j]) && CheckUnifiability(list[i], list[j]))
                     {
                         list.RemoveAt(j);
                         j--;

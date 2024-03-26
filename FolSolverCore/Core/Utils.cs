@@ -78,7 +78,7 @@ namespace FolSolverCore.Core
                         break;
                 }
             }
-            if (argument != "") { output.Add(argument); }
+            if (argument != "") { output.Add(argument.Trim()); }
             return output.ToArray();
         }
 

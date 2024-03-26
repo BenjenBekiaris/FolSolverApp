@@ -5,6 +5,85 @@
     <h2 class="page-title">Documentation</h2>
 </div>
 
+<div style="display:flex; justify-content:space-between; align-items:center">
+    <div class="written-explanation">
+        <b>Valid syntax</b> <br />
+        <ul>
+            <li>
+                <b>Predicates</b> start with uppercase letter, terms inside parentheses divided by commas [Predicate(term1, term2, ...)]
+                <ul><li>0-arity predicates do not need parentheses [Predicate]</li></ul>
+            </li>
+            <li>
+                <b>Terms</b>
+                <ul>
+                    <li>Constant symbols start with uppercase letter [Adam, Eva, ...]</li>
+                    <li>Function symbols start with lowercase letter, terms inside parentheses divided by comma [function(term1, term2, ...)]</li>
+                </ul>
+            </li>
+            <li><b>Variables</b> start with lowercase letter [x, y, ...]</li>
+            <li>
+                <b>Logical connectives</b>
+                <ul>
+                    <li>Conjunction  ∧</li>
+                    <li>Disjunction  ∨</li>
+                    <li>Implication  =></li>
+                    <li>Negation ¬</li>
+                    <li>Sequent ⊢</li>
+                </ul>
+            </li>
+            <li>
+                <b>Quantifiers</b> are written in parentheses together with bound variable [(∀x)]
+                <ul>
+                    <li>Universal ∀</li>
+                    <li>Existencial Ǝ</li>
+                </ul>
+            </li>
+        </ul>
+        All special symbols can user also input using one of their aliases described in tables at the bottom of the page. Every alias
+        starts with backslash \ and after inputing whole alias it is automaticaly converted in real time to its respective symbol. <br /> <br />
+        When writing formula for input pay close attention to position of parentheses as they play key role at defining scopes of quantifiers
+        and priorities of logical connectives. Formulas 
+        <ul>
+            <li>(∀x)P(x) => R(x) ∧ S(x)</li>
+            <li>((∀x)P(x) => R(x)) ∧ S(x)</li>
+            <li>(∀x)(P(x) => R(x)) ∧ S(x)</li>
+            <li>(∀x)(P(x) => R(x) ∧ S(x))</li>
+        </ul>
+        are all different. To ensure correct parsing, make sure that every parenthesis has opposite pair. <br /> <br />
+        Application supports three different ways of inputing premises and conclusions for resolution. It is recommended that these
+        methods are not combined, as it can easily lead to user error (even though system itself is able to parse input written in combined way).
+        Examples on the right show valid ways of inputing the same formula. 
+    </div>
+
+    <div class="input-explanation">
+        <div class="valid-input">
+            <b>Formula</b> <br />
+            (P(x) ∨ R(x)) ∧ (P(y) => R(y)) => P(x) ∧ P(y)
+        </div>
+        <div class="valid-input">
+            <b>Sequent</b> <br />
+            P(x) ∨ R(x), P(y) => R(y) ⊢ P(x), P(y)
+        </div>
+        <div class="valid-input">
+            <b>Premises and conclusions</b> <br />
+            P(x) ∨ R(x) <br />
+            P(y) => R(y) <br />
+            ⊢ <br />
+            P(x) <br />
+            P(y)
+        </div>
+    </div>
+</div>
+
+<div class="resolution-explanation">
+    <b>Interactive resolution</b> <br />
+    Processing valid input leads to interactive part of application. User has to resolve given clauses to get to contradiction (symbol □).
+    Clauses for resolution are chosen by clicking on their respective buttons and if two clauses can be resolved, new resolvent clause
+    will apear next to chosen clauses. Clicking button of new clause will add new clause to list of clauses available for resolution
+    and updates table of resolution. 
+</div>
+
+
 <div class="symbols-dictionary">
     @foreach (var entry in InputDictionary.specialSymbols)
     {

@@ -1,5 +1,6 @@
 ﻿div.top-bar {
     width: 100%;
+    margin-bottom: 2%;
     height: 75px;
     padding: 5px;
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
@@ -9,20 +10,48 @@
     border-radius: 0 0 5px 5px;
 }
 
-.button-back {
-    fill: white;
-    height: 50px;
-    margin: 5px;
-}
-
 .page-title {
     color: white;
     flex: 1;
     text-align: center;
 }
 
+div.input-explanation {
+    border-radius: 5px;
+    width: 30%;
+}
+
+div.valid-input {
+    margin-bottom: 5%;
+    font-size: 20px;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+div.written-explanation {
+    width: 65%;
+    padding: 10px;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 1%;
+    font-size: 20px;
+}
+
+div.resolution-explanation {
+    width: 65%;
+    padding: 10px;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 1%; 
+    font-size: 20px;
+}
+
 div.symbols-dictionary {
     display: flex;
+    margin-bottom: 1%;
 }
 
 table.symbols-dictionary {

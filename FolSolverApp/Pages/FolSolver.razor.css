@@ -212,6 +212,10 @@ button.copy-history-to-clipboard {
     background-color: #ddd;
 }
 
+div.selectedClauses {
+    margin-bottom: 10%;
+}
+
 button.selectedClauses {
     padding: 5px;
     margin: 5px;

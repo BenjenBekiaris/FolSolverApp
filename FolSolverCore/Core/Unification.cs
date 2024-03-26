@@ -99,8 +99,11 @@
                         }
                     }
                 }
+                return mGUnificator;
             }
-            return mGUnificator;
+
+            return null;
+            
         }
 
         private static string[] ApplyUnificator(List<string[]> unificator, string[] functionArguments)

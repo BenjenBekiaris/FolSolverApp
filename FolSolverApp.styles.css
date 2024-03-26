@@ -203,6 +203,7 @@ main[b-nojksqyzrb] {
 /* /Pages/Documentation.razor.rz.scp.css */
 div.top-bar[b-dbyf5lzyb4] {
     width: 100%;
+    margin-bottom: 2%;
     height: 75px;
     padding: 5px;
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
@@ -212,20 +213,48 @@ div.top-bar[b-dbyf5lzyb4] {
     border-radius: 0 0 5px 5px;
 }
 
-.button-back[b-dbyf5lzyb4] {
-    fill: white;
-    height: 50px;
-    margin: 5px;
-}
-
 .page-title[b-dbyf5lzyb4] {
     color: white;
     flex: 1;
     text-align: center;
 }
 
+div.input-explanation[b-dbyf5lzyb4] {
+    border-radius: 5px;
+    width: 30%;
+}
+
+div.valid-input[b-dbyf5lzyb4] {
+    margin-bottom: 5%;
+    font-size: 20px;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+div.written-explanation[b-dbyf5lzyb4] {
+    width: 65%;
+    padding: 10px;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 1%;
+    font-size: 20px;
+}
+
+div.resolution-explanation[b-dbyf5lzyb4] {
+    width: 65%;
+    padding: 10px;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 1%; 
+    font-size: 20px;
+}
+
 div.symbols-dictionary[b-dbyf5lzyb4] {
     display: flex;
+    margin-bottom: 1%;
 }
 
 table.symbols-dictionary[b-dbyf5lzyb4] {
@@ -468,6 +497,10 @@ button.copy-history-to-clipboard[b-j89r6awter] {
 
 .history tr:hover[b-j89r6awter] {
     background-color: #ddd;
+}
+
+div.selectedClauses[b-j89r6awter] {
+    margin-bottom: 10%;
 }
 
 button.selectedClauses[b-j89r6awter] {
